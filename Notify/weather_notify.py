@@ -39,5 +39,5 @@ def lineNotifyWeather(token):
 
     # send request
     payload = {'message': msg + msg_weather}
-    r = requests.post("https://notify-api.line.me/api/notify",
+    response = requests.post("https://notify-api.line.me/api/notify",
                       headers=headers, params=payload)

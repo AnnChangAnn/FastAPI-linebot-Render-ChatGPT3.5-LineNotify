@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging, uvicorn
+#import logging, uvicorn
 import openai, os
 import json
 from fastapi import FastAPI, Request, HTTPException
@@ -8,13 +8,15 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
-from Notify import weather_notify
+from Notify import weather_notify, announce_notify
 
 
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN',  None))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET',  None))
 openai.api_key = os.getenv('OPENAI_APIKEY', None)
 weather_token = os.getenv('WEATHER_TOKEN', None)
+introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
+announce_token = os.getenv('ANNOUNCE_TOKEN', None)
 
 
 class ChatGPT:  
@@ -48,19 +50,20 @@ def check_group_or_user(eventsource):
 
 chatgpt = ChatGPT()
 app = FastAPI()
-# Line Bot config
 
-@app.get("/") # 指定 api 路徑 (get方法)
+# test method
+@app.get("/test") # 指定 api 路徑 (get方法)
 async def hello():
 	return "Hello World for AnnChangAnn!!"
 
-# Line Notify
-@app.get("/lineNotifyWeather")
+# Line Weather Notify
+@app.post("/lineNotifyWeather")
 async def lineNotifyWeather():
     # return  lineNotifyMessage('1',values)
     weather_notify.lineNotifyWeather(weather_token)
     return 'OK'
 
+# 監聽所有來自 /callback 的 Post Request
 @app.post("/callback")
 async def callback(request: Request):
     signature = request.headers["X-Line-Signature"]
@@ -71,6 +74,15 @@ async def callback(request: Request):
         raise HTTPException(status_code=400, detail="Missing Parameters")
     return "OK"
 
+# 加入群組自動發送
+@handler.add(JoinEvent)
+def handle_join(event):
+    message = TextSendMessage(text = introduce_msg)
+
+    line_bot_api.reply_message(event.reply_token,message)
+    print("JoinEvent =", JoinEvent)
+
+# 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handling_message(event):
     #replyToken = event.reply_token
@@ -78,8 +90,27 @@ def handling_message(event):
     print(user_message)
     
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
-        if user_message.find('請問蒜頭') == 0:
+        if user_message == "!蒜頭自介" or strCheck == "！蒜頭自介":
+            message = TextSendMessage(text = introduce_msg)
+            line_bot_api.reply_message(event.reply_token, message)
+
+        elif user_message.find('請問蒜頭') == 0:
             event_id = check_group_or_user(event.source)
             reply_msg = chatgpt.get_response(user_message)
             line_bot_api.push_message(event_id, TextSendMessage(text=reply_msg))
+        
+        # announce to line group
+        elif user_message.find('！公告 ') == 0 or user_message.find('!公告 ') == 0:
+            announce_notify.lineNotifyAnnounce(message[4:], announce_token)
+
+        # 幹話
+        elif user_message == "好美":
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "哪有你美"))
+        elif user_message in ["好阿", "好啊", "好"]:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = user_message))
+        elif user_message == "!!測試":
+            event_id = check_group_or_user(event.source)
+            print(event_id)
+            #time.sleep(31)
+            line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
 
