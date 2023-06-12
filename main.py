@@ -31,7 +31,7 @@ class ChatGPT:
                     {'role': 'user', 'content': prompt}
                 ],
                 temperature = self.temperature,
-                max_token = self.max_tokens
+                max_tokens = self.max_tokens
                 )
         reply_msg = response['choices'][0]['message']['content'].strip()
         print('AI回答內容' + reply_msg)
