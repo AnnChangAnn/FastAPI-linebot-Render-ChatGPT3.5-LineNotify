@@ -1,0 +1,8 @@
+line-bot-sdk
+openai
+anyio
+fastapi
+pydantic
+python-dotenv
+PyYAML
+uvicorn
