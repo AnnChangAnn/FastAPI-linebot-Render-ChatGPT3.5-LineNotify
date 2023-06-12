@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-
 import logging, uvicorn
 import openai, os
 import json
 from fastapi import FastAPI, Request, HTTPException
 
 from linebot import LineBotApi, WebhookHandler
-
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
+
+from Notify import weather_notify
 
 
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN',  None))
@@ -53,6 +53,13 @@ app = FastAPI()
 @app.get("/") # 指定 api 路徑 (get方法)
 async def hello():
 	return "Hello World for AnnChangAnn!!"
+
+# Line Notify
+@app.get("/lineNotifyWeather")
+async def lineNotifyWeather():
+    # return  lineNotifyMessage('1',values)
+    weather_notify.lineNotifyWeather(weather_token)
+    return 'OK'
 
 @app.post("/callback")
 async def callback(request: Request):
