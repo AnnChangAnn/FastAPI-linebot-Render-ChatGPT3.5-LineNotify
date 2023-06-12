@@ -90,7 +90,7 @@ def handling_message(event):
     print(user_message)
     
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
-        if user_message == "!蒜頭自介" or strCheck == "！蒜頭自介":
+        if user_message == "!蒜頭自介" or user_message == "！蒜頭自介":
             message = TextSendMessage(text = introduce_msg)
             line_bot_api.reply_message(event.reply_token, message)
 
