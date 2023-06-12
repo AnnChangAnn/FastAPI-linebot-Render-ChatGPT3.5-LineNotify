@@ -101,7 +101,7 @@ def handling_message(event):
         
         # announce to line group
         elif user_message.find('！公告 ') == 0 or user_message.find('!公告 ') == 0:
-            announce_notify.lineNotifyAnnounce(message[4:], announce_token)
+            announce_notify.lineNotifyAnnounce(user_message[4:], announce_token)
 
         # 幹話
         elif user_message == "好美":
