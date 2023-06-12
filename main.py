@@ -10,10 +10,13 @@ from linebot.models import *
 
 from Notify import weather_notify, announce_notify
 
-
+# get env variables
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN',  None))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET',  None))
 openai.api_key = os.getenv('OPENAI_APIKEY', None)
+openai_model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
+openai_temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1.0))
+openai_max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 2000))
 weather_token = os.getenv('WEATHER_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 announce_token = os.getenv('ANNOUNCE_TOKEN', None)
@@ -21,9 +24,9 @@ announce_token = os.getenv('ANNOUNCE_TOKEN', None)
 
 class ChatGPT:  
     def __init__(self):
-        self.model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
-        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1.0))
-        self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 2000))
+        self.model = openai_model
+        self.temperature = openai_temperature
+        self.max_tokens = openai_max_tokens
 
     def get_response(self, message):
         prompt = message[4:]
@@ -37,8 +40,11 @@ class ChatGPT:
                 )
         reply_msg = response['choices'][0]['message']['content'].strip()
         print('AI回答內容' + reply_msg)
-
         return reply_msg
+
+
+chatgpt = ChatGPT()
+app = FastAPI()
 
 
 def check_group_or_user(eventsource):
@@ -46,10 +52,6 @@ def check_group_or_user(eventsource):
         return eventsource.group_id
     else:
         return eventsource.user_id
-
-
-chatgpt = ChatGPT()
-app = FastAPI()
 
 # test method
 @app.get("/test") # 指定 api 路徑 (get方法)
