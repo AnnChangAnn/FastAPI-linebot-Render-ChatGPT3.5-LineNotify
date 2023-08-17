@@ -97,9 +97,10 @@ def handling_message(event):
             line_bot_api.reply_message(event.reply_token, message)
 
         elif user_message.find('請問蒜頭') == 0:
-            event_id = check_group_or_user(event.source)
+            #event_id = check_group_or_user(event.source)
             reply_msg = chatgpt.get_response(user_message)
-            line_bot_api.push_message(event_id, TextSendMessage(text=reply_msg))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_msg))
+            #line_bot_api.push_message(event_id, TextSendMessage(text=reply_msg))
         
         # announce to line group
         elif user_message.find('！公告 ') == 0 or user_message.find('!公告 ') == 0:
@@ -114,5 +115,6 @@ def handling_message(event):
             event_id = check_group_or_user(event.source)
             print(event_id)
             #time.sleep(31)
-            line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="測試成功!"))
+            #line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
 
