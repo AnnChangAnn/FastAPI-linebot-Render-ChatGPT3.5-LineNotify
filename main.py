@@ -70,7 +70,6 @@ async def lineNotifyWeather():
 @app.post("/tickingclock")
 async def TickingClock():
     print('TickingClock: ' + str(datetime.now()))
-    return "OK"
 
 # 監聽所有來自 /callback 的 Post Request
 @app.post("/callback")
