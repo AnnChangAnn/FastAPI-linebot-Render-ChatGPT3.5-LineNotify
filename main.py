@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #import logging, uvicorn
+from datetime import datetime
 import openai, os
 import json
 from fastapi import FastAPI, Request, HTTPException
@@ -64,6 +65,11 @@ async def lineNotifyWeather():
     # return  lineNotifyMessage('1',values)
     weather_notify.lineNotifyWeather(weather_token)
     return 'OK'
+
+# Keep Alive
+@app.post("/tickingclock")
+async def TickingClock():
+    print('TickingClock: ' + datetime.now())
 
 # 監聽所有來自 /callback 的 Post Request
 @app.post("/callback")
