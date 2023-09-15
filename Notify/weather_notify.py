@@ -19,7 +19,8 @@ def lineNotifyWeather(token):
     msg_weather = ''
 
     for i in Location_List[0:]:
-        cwbapi = f"https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E74B046A-CAB4-4570-B4D9-FA3F7F225DC1&locationName={i}&startTime="
+        # 氣象局改名為氣象署 cwb => cwa
+        cwbapi = f"https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-E74B046A-CAB4-4570-B4D9-FA3F7F225DC1&locationName={i}&startTime="
         cwbr = requests.get(cwbapi)
         print('request success!!')
 
