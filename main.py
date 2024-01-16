@@ -18,7 +18,7 @@ handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET',  None))
 
 # openai.api_key = os.getenv('OPENAI_APIKEY', None)
 client = OpenAI(
-  api_key=os.getenv['OPENAI_APIKEY'],  # this is also the default, it can be omitted
+  api_key=os.getenv('OPENAI_APIKEY', None),  # this is also the default, it can be omitted
 )
 
 openai_model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
