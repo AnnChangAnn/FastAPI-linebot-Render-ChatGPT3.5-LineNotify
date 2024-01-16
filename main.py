@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 #import logging, uvicorn
 from datetime import datetime
-import openai, os
+import os
+from openai import AsyncOpenAI
 import json
 from fastapi import FastAPI, Request, HTTPException
 
@@ -14,7 +15,12 @@ from Notify import weather_notify, announce_notify
 # get env variables
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN',  None))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET',  None))
-openai.api_key = os.getenv('OPENAI_APIKEY', None)
+
+# openai.api_key = os.getenv('OPENAI_APIKEY', None)
+client = AsyncOpenAI(
+  api_key=os.getenv['OPENAI_APIKEY'],  # this is also the default, it can be omitted
+)
+
 openai_model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
 openai_temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1.0))
 openai_max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 2000))
@@ -29,9 +35,9 @@ class ChatGPT:
         self.temperature = openai_temperature
         self.max_tokens = openai_max_tokens
 
-    def get_response(self, message):
+    async def get_response(self, message):
         prompt = message[4:]
-        response = openai.ChatCompletion.create(
+        response = await client.chat.completions.create(
 	            model = self.model,
                 messages = [
                     {'role': 'user', 'content': prompt}
