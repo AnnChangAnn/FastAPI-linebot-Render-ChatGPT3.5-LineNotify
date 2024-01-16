@@ -21,9 +21,9 @@ client = OpenAI(
   api_key=os.getenv('OPENAI_APIKEY', None),  # this is also the default, it can be omitted
 )
 
-openai_model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
-openai_temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1.0))
-openai_max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 2000))
+openai_model = os.getenv("OPENAI_MODEL", None)
+openai_temperature = float(os.getenv("OPENAI_TEMPERATURE", None))
+openai_max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", None))
 weather_token = os.getenv('WEATHER_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 announce_token = os.getenv('ANNOUNCE_TOKEN', None)
