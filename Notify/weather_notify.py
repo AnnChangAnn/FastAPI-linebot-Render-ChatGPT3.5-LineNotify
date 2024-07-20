@@ -14,7 +14,7 @@ def lineNotifyWeather(token):
     print(NowDate)
 
     # set the weather of location
-    Location_List = ['臺北市', '新北市', '桃園市', '基隆市']
+    Location_List = ['臺北市', '新北市', '桃園市', '基隆市', '高雄市']
     msg = "\r    時間: 6:00~18:00\r"
     msg_weather = ''
 
