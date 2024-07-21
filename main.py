@@ -10,7 +10,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
-from Notify import weather_notify, announce_notify
+from Notify import weather_notify, announce_notify, star_sign_notify
 
 # get env variables
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN',  None))
@@ -28,6 +28,17 @@ weather_token = os.getenv('WEATHER_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 announce_token = os.getenv('ANNOUNCE_TOKEN', None)
 
+star_sign_dict = {
+    '牡羊座': '0', '金牛座': '1', '雙子座': '2', '巨蟹座': '3',
+    '獅子座': '4', '處女座': '5', '天秤座': '6', '天蠍座': '7',
+    '射手座': '8', '摩羯座': '9', '水瓶座': '10', '雙魚座': '11',
+    '双子座': '2', '天平座': '6', '天枰座': '6', '魔羯座': '9',
+    '水平座': '10', '双魚座': '11', '水平': '10', '双魚': '11',
+    '牡羊': '0', '金牛': '1', '雙子': '2', '巨蟹': '3',
+    '獅子': '4', '處女': '5', '天秤': '6', '天蠍': '7',
+    '射手': '8', '摩羯': '9', '水瓶': '10', '雙魚': '11',
+    '双子': '2', '天平': '6', '天枰': '6', '魔羯': '9'
+}
 
 class ChatGPT:  
     def __init__(self):
@@ -104,7 +115,19 @@ def handling_message(event):
     print(user_message)
     
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
-        if user_message == "!蒜頭自介" or user_message == "！蒜頭自介":
+
+        #star sign response
+        star_sign = user_message.replace(' ','')
+        if len(star_sign) >= 4:
+            star_sign = star_sign[1:3]
+
+        if len(star_sign) == 3 and star_sign in star_sign_dict:
+            star_sign_daily = star_sign_notify.star_sign_daily(star_sign, star_sign_dict[star_sign])
+            message = TextSendMessage(text = star_sign_daily)
+            line_bot_api.reply_message(event.reply_token, message)
+
+
+        elif user_message == "!蒜頭自介" or user_message == "！蒜頭自介":
             message = TextSendMessage(text = introduce_msg)
             line_bot_api.reply_message(event.reply_token, message)
 
