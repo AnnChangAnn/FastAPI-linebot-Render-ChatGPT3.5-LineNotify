@@ -13,7 +13,7 @@ def StarSignDaily(star_sign, serial_no):
     # get element for class="TODAY_CONTENT"
     today_content_elements = soup.find_all(class_="TODAY_CONTENT")
 
-    daily_analysis = '【' + star_sign + '】今日運勢 \n' 
+    daily_analysis = '【' + star_sign + '】\n' 
     for element in today_content_elements:
         paragraphs = element.find_all('p')
         for paragraph in paragraphs:
