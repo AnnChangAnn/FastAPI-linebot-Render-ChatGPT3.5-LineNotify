@@ -21,12 +21,12 @@ def StarSignDaily(star_sign, serial_no):
 
     return daily_analysis
 
-def lineNotifyStarSign(star_sign, serial_no):
+def lineNotifyStarSign(token, star_sign, serial_no):
 
     # test token : VAH3QdBdbkQ7B9blSEpEpjlwA4GR0MKxzbEHhShkse8
     # add headers
     headers = {
-        "Authorization": "Bearer " + "FA9HbhPNUmEg2zgAySH79xP0ySACtxbUOn2GofMZFb0",
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/x-www-form-urlencoded"}
     
     msg = '\n' + StarSignDaily(star_sign, serial_no)

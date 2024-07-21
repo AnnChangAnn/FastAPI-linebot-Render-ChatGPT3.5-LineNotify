@@ -26,6 +26,7 @@ openai_model = os.getenv("OPENAI_MODEL", None)
 openai_temperature = float(os.getenv("OPENAI_TEMPERATURE", None))
 openai_max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", None))
 weather_token = os.getenv('WEATHER_TOKEN', None)
+star_sign_token = os.getenv('STAR_SIGN_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 announce_token = os.getenv('ANNOUNCE_TOKEN', None)
 
@@ -94,7 +95,7 @@ async def lineNotifyWeather():
 @app.post("/lineNotifyStarSign")
 async def lineNotifyStarSign():
     random_star_sign = random.choice(list(star_sign_dict.keys()))
-    star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
+    star_sign_notify.lineNotifyStarSign(star_sign_token, random_star_sign, star_sign_dict[random_star_sign])
     return 'OK'
 
 # Keep Alive
