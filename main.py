@@ -118,11 +118,12 @@ def handling_message(event):
 
         #star sign response
         star_sign = user_message.replace(' ','')
-        if len(star_sign) >= 4:
+        if len(star_sign) == 3:
+            star_sign = star_sign[1:3]
+        elif len(star_sign) == 4:
             star_sign = star_sign[1:4]
-            print(star_sign)
 
-        if len(star_sign) == 3 and star_sign in star_sign_dict:
+        if (len(star_sign) == 2 or len(star_sign) == 3) and star_sign in star_sign_dict:
             star_sign_daily = star_sign_notify.star_sign_daily(star_sign, star_sign_dict[star_sign])
             message = TextSendMessage(text = star_sign_daily)
             line_bot_api.reply_message(event.reply_token, message)
