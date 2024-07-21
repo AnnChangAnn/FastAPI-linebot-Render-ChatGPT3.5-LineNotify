@@ -6,5 +6,5 @@ def lineNotifyAnnounce(message, token):
         "Authorization": "Bearer " + token,
         "Content-Type" : "application/x-www-form-urlencoded"}
 
-    payload = {'message': message}
-    response = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
+    res = {'message': message}
+    response = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = res)

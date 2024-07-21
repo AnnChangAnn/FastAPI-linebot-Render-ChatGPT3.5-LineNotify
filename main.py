@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 from openai import OpenAI
 import json
+import random
 from fastapi import FastAPI, Request, HTTPException
 
 from linebot import LineBotApi, WebhookHandler
@@ -28,16 +29,22 @@ weather_token = os.getenv('WEATHER_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 announce_token = os.getenv('ANNOUNCE_TOKEN', None)
 
+star_sign_map = {
+    '牡羊座': '牡羊座', '金牛座': '金牛座', '雙子座': '雙子座', '巨蟹座': '巨蟹座',
+    '獅子座': '獅子座', '處女座': '處女座', '天秤座': '天秤座', '天蠍座': '天蠍座',
+    '射手座': '射手座', '摩羯座': '摩羯座', '水瓶座': '水瓶座', '雙魚座': '雙魚座',
+    '双子座': '雙子座', '天平座': '天秤座', '天枰座': '天秤座', '魔羯座': '摩羯座',
+    '水平座': '水瓶座', '双魚座': '雙魚座', '水平': '水瓶座', '双魚': '雙魚座',
+    '牡羊': '牡羊座', '金牛': '金牛座', '雙子': '雙子座', '巨蟹': '巨蟹座',
+    '獅子': '獅子座', '處女': '處女座', '天秤': '天秤座', '天蠍': '天蠍座',
+    '射手': '射手座', '摩羯': '摩羯座', '水瓶': '水瓶座', '雙魚': '雙魚座',
+    '双子': '雙子座', '天平': '天秤座', '天枰': '天秤座', '魔羯': '摩羯座'
+}
+
 star_sign_dict = {
     '牡羊座': '0', '金牛座': '1', '雙子座': '2', '巨蟹座': '3',
     '獅子座': '4', '處女座': '5', '天秤座': '6', '天蠍座': '7',
-    '射手座': '8', '摩羯座': '9', '水瓶座': '10', '雙魚座': '11',
-    '双子座': '2', '天平座': '6', '天枰座': '6', '魔羯座': '9',
-    '水平座': '10', '双魚座': '11', '水平': '10', '双魚': '11',
-    '牡羊': '0', '金牛': '1', '雙子': '2', '巨蟹': '3',
-    '獅子': '4', '處女': '5', '天秤': '6', '天蠍': '7',
-    '射手': '8', '摩羯': '9', '水瓶': '10', '雙魚': '11',
-    '双子': '2', '天平': '6', '天枰': '6', '魔羯': '9'
+    '射手座': '8', '摩羯座': '9', '水瓶座': '10', '雙魚座': '11'
 }
 
 class ChatGPT:  
@@ -83,6 +90,13 @@ async def lineNotifyWeather():
     weather_notify.lineNotifyWeather(weather_token)
     return 'OK'
 
+# Line Weather Notify
+@app.post("/lineNotifyStarSign")
+async def lineNotifyStarSign():
+    random_star_sign = random.choice(list(star_sign_dict.keys()))
+    star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
+    return 'OK'
+
 # Keep Alive
 @app.post("/tickingclock")
 async def TickingClock():
@@ -123,8 +137,9 @@ def handling_message(event):
         elif len(star_sign) == 4:
             star_sign = star_sign[1:4]
 
-        if (len(star_sign) == 2 or len(star_sign) == 3) and star_sign in star_sign_dict:
-            star_sign_daily = star_sign_notify.star_sign_daily(star_sign, star_sign_dict[star_sign])
+        if (len(star_sign) == 2 or len(star_sign) == 3) and star_sign in star_sign_map:
+            star_sign = star_sign_map[star_sign]
+            star_sign_daily = star_sign_notify.StarSignDaily(star_sign, star_sign_dict[star_sign])
             message = TextSendMessage(text = star_sign_daily)
             line_bot_api.reply_message(event.reply_token, message)
 

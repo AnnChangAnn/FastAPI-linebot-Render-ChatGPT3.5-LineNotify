@@ -10,8 +10,8 @@ def lineNotifyWeather(token):
         "Content-Type": "application/x-www-form-urlencoded"}
     
     # get now time
-    NowDate = datetime.now().strftime('%Y-%m-%d')
-    print(NowDate)
+    # NowDate = datetime.now().strftime('%Y-%m-%d')
+    # print(NowDate)
 
     # set the weather of location
     Location_List = ['臺北市', '新北市', '桃園市', '基隆市', '高雄市']
@@ -39,6 +39,6 @@ def lineNotifyWeather(token):
     降雨機率: {pop}%'''
 
     # send request
-    payload = {'message': msg + msg_weather}
+    res = {'message': msg + msg_weather}
     response = requests.post("https://notify-api.line.me/api/notify",
-                      headers=headers, params=payload)
+                      headers=headers, params=res)
