@@ -26,10 +26,10 @@ def lineNotifyStarSign(star_sign, serial_no):
     # test token : VAH3QdBdbkQ7B9blSEpEpjlwA4GR0MKxzbEHhShkse8
     # add headers
     headers = {
-        "Authorization": "Bearer " + "VAH3QdBdbkQ7B9blSEpEpjlwA4GR0MKxzbEHhShkse8",
+        "Authorization": "Bearer " + "FA9HbhPNUmEg2zgAySH79xP0ySACtxbUOn2GofMZFb0",
         "Content-Type": "application/x-www-form-urlencoded"}
     
-    msg = StarSignDaily(star_sign, serial_no)
+    msg = '\n' + StarSignDaily(star_sign, serial_no)
     msg += '\n'
     msg += '若要查詢更多星座運勢 \n'
     msg += '請輸入: ! + 星座名 \n'
