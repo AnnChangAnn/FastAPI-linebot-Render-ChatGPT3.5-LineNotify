@@ -19,6 +19,9 @@ def StarSignDaily(star_sign, serial_no):
         for paragraph in paragraphs:
             daily_analysis += paragraph.get_text(strip=True) + '\n'
 
+    if daily_analysis.find("整體運勢") == -1:
+        return "媽的找不到星座運勢 八成是網頁改版了 可憐哪!快報修吧"
+        
     return daily_analysis
 
 def lineNotifyStarSign(token, star_sign, serial_no):
@@ -37,5 +40,11 @@ def lineNotifyStarSign(token, star_sign, serial_no):
 
     # send request
     res = {'message': msg }
+
+    if msg.find("媽的找不到星座運勢 八成是網頁改版了 可憐哪!快報修吧") >= 0:
+        headers = {
+            "Authorization": "Bearer " + "VAH3QdBdbkQ7B9blSEpEpjlwA4GR0MKxzbEHhShkse8",
+            "Content-Type": "application/x-www-form-urlencoded"}
+        
     response = requests.post("https://notify-api.line.me/api/notify",
                       headers=headers, params=res)
