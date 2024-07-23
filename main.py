@@ -138,7 +138,7 @@ def handling_message(event):
         if len(star_sign) in {3, 4} and star_sign[0] in special_chars:
     	    star_sign = star_sign[1:]
 
-	if len(star_sign) in {2, 3} and star_sign in star_sign_map:
+        if len(star_sign) in {2, 3} and star_sign in star_sign_map:
             star_sign = star_sign_map[star_sign]
             star_sign_daily = star_sign_notify.StarSignDaily(star_sign, star_sign_dict[star_sign])
             message = TextSendMessage(text = star_sign_daily)
