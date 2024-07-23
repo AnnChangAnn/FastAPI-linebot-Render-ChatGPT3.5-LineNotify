@@ -2,7 +2,6 @@
 #import logging, uvicorn
 from datetime import datetime
 import os
-from openai import OpenAI
 import json
 import random
 from fastapi import FastAPI, Request, HTTPException
@@ -11,25 +10,19 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
+from Class import chatgpt
 from Notify import weather_notify, announce_notify, star_sign_notify
 
 # get env variables
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN',  None))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET',  None))
 
-# openai.api_key = os.getenv('OPENAI_APIKEY', None)
-client = OpenAI(
-  api_key=os.getenv('OPENAI_APIKEY', None),  # this is also the default, it can be omitted
-)
-
-openai_model = os.getenv("OPENAI_MODEL", None)
-openai_temperature = float(os.getenv("OPENAI_TEMPERATURE", None))
-openai_max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", None))
 weather_token = os.getenv('WEATHER_TOKEN', None)
 star_sign_token = os.getenv('STAR_SIGN_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 announce_token = os.getenv('ANNOUNCE_TOKEN', None)
 
+# init dictionary
 star_sign_map = {
     '牡羊座': '牡羊座', '金牛座': '金牛座', '雙子座': '雙子座', '巨蟹座': '巨蟹座',
     '獅子座': '獅子座', '處女座': '處女座', '天秤座': '天秤座', '天蠍座': '天蠍座',
@@ -41,37 +34,15 @@ star_sign_map = {
     '射手': '射手座', '摩羯': '摩羯座', '水瓶': '水瓶座', '雙魚': '雙魚座',
     '双子': '雙子座', '天平': '天秤座', '天枰': '天秤座', '魔羯': '摩羯座'
 }
-
 star_sign_dict = {
     '牡羊座': '0', '金牛座': '1', '雙子座': '2', '巨蟹座': '3',
     '獅子座': '4', '處女座': '5', '天秤座': '6', '天蠍座': '7',
     '射手座': '8', '摩羯座': '9', '水瓶座': '10', '雙魚座': '11'
 }
-
 special_chars = {"!", "！"}
 
-class ChatGPT:  
-    def __init__(self):
-        self.model = openai_model
-        self.temperature = openai_temperature
-        self.max_tokens = openai_max_tokens
-
-    def get_response(self, message):
-        prompt = message[4:]
-        response = client.chat.completions.create(
-	            model = self.model,
-                messages = [
-                    {'role': 'user', 'content': prompt}
-                ],
-                temperature = self.temperature,
-                max_tokens = self.max_tokens
-                )
-        reply_msg = response.choices[0].message.content.strip()
-        print('AI回答內容' + reply_msg)
-        return reply_msg
-
-
-chatgpt = ChatGPT()
+# init ChatGPT
+chatGPT = chatgpt.ChatGPT()
 app = FastAPI()
 
 
@@ -89,7 +60,6 @@ async def hello():
 # Line Weather Notify
 @app.post("/lineNotifyWeather")
 async def lineNotifyWeather():
-    # return  lineNotifyMessage('1',values)
     weather_notify.lineNotifyWeather(weather_token)
     return 'OK'
 
@@ -136,8 +106,8 @@ def handling_message(event):
         #star sign response
         star_sign = user_message.replace(' ','')
         if len(star_sign) in {3, 4} and star_sign[0] in special_chars:
-    	    star_sign = star_sign[1:]
-
+            star_sign = star_sign[1:]
+        
         if len(star_sign) in {2, 3} and star_sign in star_sign_map:
             star_sign = star_sign_map[star_sign]
             star_sign_daily = star_sign_notify.StarSignDaily(star_sign, star_sign_dict[star_sign])
@@ -151,18 +121,18 @@ def handling_message(event):
 
         elif user_message.find('請問蒜頭') == 0:
             #event_id = check_group_or_user(event.source)
-            reply_msg = chatgpt.get_response(user_message)
+            reply_msg = chatGPT.get_response(user_message)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_msg))
             #line_bot_api.push_message(event_id, TextSendMessage(text=reply_msg))
         
         # announce to line group
-        elif user_message.find('！公告 ') == 0 or user_message.find('!公告 ') == 0:
+        elif user_message.startswith('！公告 ') or user_message.startswith('!公告 '):
             announce_notify.lineNotifyAnnounce(user_message[4:], announce_token)
 
         # 幹話
         elif user_message == "好美":
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "哪有你美"))
-        elif user_message in ["好阿", "好啊", "好"]:
+        elif user_message in {"好阿", "好啊", "好"}:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = user_message))
         elif user_message == "!!測試":
             event_id = check_group_or_user(event.source)
