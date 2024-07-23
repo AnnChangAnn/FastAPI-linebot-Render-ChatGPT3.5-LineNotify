@@ -1,4 +1,5 @@
 import requests
+import os
 from bs4 import BeautifulSoup
 
 def StarSignDaily(star_sign, serial_no):
@@ -26,7 +27,6 @@ def StarSignDaily(star_sign, serial_no):
 
 def lineNotifyStarSign(token, star_sign, serial_no):
 
-    # test token : VAH3QdBdbkQ7B9blSEpEpjlwA4GR0MKxzbEHhShkse8
     # add headers
     headers = {
         "Authorization": "Bearer " + token,
@@ -42,8 +42,9 @@ def lineNotifyStarSign(token, star_sign, serial_no):
     res = {'message': msg }
 
     if msg.find("媽的找不到星座運勢 八成是網頁改版了 可憐哪!快報修吧") >= 0:
+        myself_token = os.getenv('MYSELF_TOKEN', None)
         headers = {
-            "Authorization": "Bearer " + "VAH3QdBdbkQ7B9blSEpEpjlwA4GR0MKxzbEHhShkse8",
+            "Authorization": "Bearer " + myself_token,
             "Content-Type": "application/x-www-form-urlencoded"}
         
     response = requests.post("https://notify-api.line.me/api/notify",
