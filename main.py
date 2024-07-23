@@ -48,6 +48,8 @@ star_sign_dict = {
     '射手座': '8', '摩羯座': '9', '水瓶座': '10', '雙魚座': '11'
 }
 
+special_chars = {"!", "！"}
+
 class ChatGPT:  
     def __init__(self):
         self.model = openai_model
@@ -133,19 +135,17 @@ def handling_message(event):
 
         #star sign response
         star_sign = user_message.replace(' ','')
-        if len(star_sign) == 3:
-            star_sign = star_sign[1:3]
-        elif len(star_sign) == 4:
-            star_sign = star_sign[1:4]
+        if len(star_sign) in {3, 4} and star_sign[0] in special_chars:
+    	    star_sign = star_sign[1:]
 
-        if (len(star_sign) == 2 or len(star_sign) == 3) and star_sign in star_sign_map:
+	if len(star_sign) in {2, 3} and star_sign in star_sign_map:
             star_sign = star_sign_map[star_sign]
             star_sign_daily = star_sign_notify.StarSignDaily(star_sign, star_sign_dict[star_sign])
             message = TextSendMessage(text = star_sign_daily)
             line_bot_api.reply_message(event.reply_token, message)
 
 
-        elif user_message == "!蒜頭自介" or user_message == "！蒜頭自介":
+        elif user_message in {"!蒜頭自介", "！蒜頭自介"}:
             message = TextSendMessage(text = introduce_msg)
             line_bot_api.reply_message(event.reply_token, message)
 
