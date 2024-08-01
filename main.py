@@ -105,22 +105,22 @@ def handling_message(event):
 
         #star sign response
         star_sign = user_message.replace(' ','')
-	star_check = False
+        star_check = False
         if len(star_sign) in {3, 4} and star_sign[0] in special_chars:
             star_sign = star_sign[1:]
-	    star_check = True
+            star_check = True
         
         if star_check and len(star_sign) in {2, 3} and star_sign in star_sign_map:
             star_sign = star_sign_map[star_sign]
             star_sign_daily = star_sign_notify.StarSignDaily(star_sign, star_sign_dict[star_sign])
             message = TextSendMessage(text = star_sign_daily)
             line_bot_api.reply_message(event.reply_token, message)
-
-
+        
+        
         elif user_message in {"!蒜頭自介", "！蒜頭自介"}:
             message = TextSendMessage(text = introduce_msg)
             line_bot_api.reply_message(event.reply_token, message)
-
+        
         elif user_message.find('請問蒜頭') == 0:
             #event_id = check_group_or_user(event.source)
             reply_msg = chatGPT.get_response(user_message)
@@ -130,7 +130,7 @@ def handling_message(event):
         # announce to line group
         elif user_message.startswith('！公告 ') or user_message.startswith('!公告 '):
             announce_notify.lineNotifyAnnounce(user_message[4:], announce_token)
-
+        
         # 幹話
         elif user_message == "好美":
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "哪有你美"))
@@ -142,4 +142,5 @@ def handling_message(event):
             #time.sleep(31)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="測試成功!"))
             #line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
+
 
