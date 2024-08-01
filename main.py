@@ -105,10 +105,12 @@ def handling_message(event):
 
         #star sign response
         star_sign = user_message.replace(' ','')
+	star_check = False
         if len(star_sign) in {3, 4} and star_sign[0] in special_chars:
             star_sign = star_sign[1:]
+	    star_check = True
         
-        if len(star_sign) in {2, 3} and star_sign in star_sign_map:
+        if star_check and len(star_sign) in {2, 3} and star_sign in star_sign_map:
             star_sign = star_sign_map[star_sign]
             star_sign_daily = star_sign_notify.StarSignDaily(star_sign, star_sign_dict[star_sign])
             message = TextSendMessage(text = star_sign_daily)
