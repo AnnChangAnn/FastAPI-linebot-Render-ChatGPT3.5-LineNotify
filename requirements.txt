@@ -8,3 +8,4 @@ PyYAML
 uvicorn
 bs4
 typing-extensions
+jiter
