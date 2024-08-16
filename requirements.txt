@@ -7,3 +7,4 @@ python-dotenv
 PyYAML
 uvicorn
 bs4
+typing-extensions
