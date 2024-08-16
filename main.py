@@ -134,6 +134,8 @@ def handling_message(event):
         # 幹話
         elif user_message == "好美":
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "哪有你美"))
+	elif user_message in {"對吧蒜頭", "是吧蒜頭"}:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "沒錯!!"))
         elif user_message in {"好阿", "好啊", "好"}:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = user_message))
         elif user_message == "!!測試":
