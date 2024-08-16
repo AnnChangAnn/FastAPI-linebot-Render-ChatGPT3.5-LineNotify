@@ -1,5 +1,5 @@
 line-bot-sdk
-openai
+openai==1.39.0
 anyio
 fastapi
 pydantic
@@ -8,4 +8,3 @@ PyYAML
 uvicorn
 bs4
 typing-extensions
-jiter==0.4.0
