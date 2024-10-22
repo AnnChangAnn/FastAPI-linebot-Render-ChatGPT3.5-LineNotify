@@ -101,8 +101,8 @@ def handling_message(event):
     user_message = str(event.message.text)
     print(user_message)
 
-    if (event.source.groupId != None and event.source.groupId != ""):
-        print('GroupId: ' + event.source.groupId)
+    event_str = json.dumps(event)
+    print('event: ' + event_str)
 
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 
