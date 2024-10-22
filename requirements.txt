@@ -2,7 +2,7 @@ line-bot-sdk
 openai==1.39.0
 anyio
 fastapi
-pydantic
+pydantic==2.0.3
 python-dotenv
 PyYAML
 uvicorn
