@@ -101,7 +101,8 @@ def handling_message(event):
     user_message = str(event.message.text)
     print(user_message)
 
-    event_str = json.dumps(event)
+    event_dict = event.to_dict()
+    event_str = json.dumps(event_dict)
     print('event: ' + event_str)
 
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
