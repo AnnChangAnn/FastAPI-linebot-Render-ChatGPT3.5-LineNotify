@@ -101,7 +101,8 @@ def handling_message(event):
     user_message = str(event.message.text)
     print(user_message)
 
-    print(event)
+    if "source" in event and "groupId" in event.source and event.source.groupId:
+        print(event.source.groupId)
 
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 
