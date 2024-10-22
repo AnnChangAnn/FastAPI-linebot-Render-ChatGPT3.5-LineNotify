@@ -101,8 +101,9 @@ def handling_message(event):
     user_message = str(event.message.text)
     print(user_message)
 
-    if "source" in event and "groupId" in event.source and event.source.groupId:
-        print(event.source.groupId)
+    if event.source.type == 'group':
+        group_id = event.source.group_id
+        print("Message is from group. Group ID:", group_id)
 
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 
