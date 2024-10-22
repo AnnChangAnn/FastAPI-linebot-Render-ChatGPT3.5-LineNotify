@@ -100,7 +100,10 @@ def handling_message(event):
     #replyToken = event.reply_token
     user_message = str(event.message.text)
     print(user_message)
-    
+
+    if (event.source.groupId != None and event.source.groupId != ""):
+        print('GroupId: ' + event.source.groupId)
+
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 
         #star sign response
