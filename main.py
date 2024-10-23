@@ -21,6 +21,11 @@ weather_token = os.getenv('WEATHER_TOKEN', None)
 star_sign_token = os.getenv('STAR_SIGN_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 announce_token = os.getenv('ANNOUNCE_TOKEN', None)
+cwa_token = os.getenv('CWA_TOKEN', None)
+
+# push message notify ids
+specific_notify_id = os.getenv('SPECIFIC_NOTIFY_ID', None)
+notify_ids = specific_notify_id.split(',')
 
 # init dictionary
 star_sign_map = {
@@ -60,18 +65,18 @@ async def hello():
 # Line Weather Notify
 @app.post("/lineNotifyWeather")
 async def lineNotifyWeather():
-    weather_notify.lineNotifyWeather(weather_token)
+    reply_msg = weather_notify.lineNotifyWeather(cwa_token)
+
+    for id in notify_ids:
+        line_bot_api.push_message(id, TextSendMessage(text=reply_msg))
     return 'OK'
 
-# Line Weather Notify
 # Line StarSign Notify
 @app.post("/lineNotifyStarSign")
 async def lineNotifyStarSign():
     random_star_sign = random.choice(list(star_sign_dict.keys()))
-    reply_msg = star_sign_notify.lineNotifyStarSign(star_sign_token, random_star_sign, star_sign_dict[random_star_sign])
+    reply_msg = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
 
-    specific_notify_id = os.getenv('SPECIFIC_NOTIFY_ID', None)
-    notify_ids = specific_notify_id.split(',')
     for id in notify_ids:
         line_bot_api.push_message(id, TextSendMessage(text=reply_msg))
     return 'OK'
@@ -122,7 +127,7 @@ def handling_message(event):
         
         if star_check and len(star_sign) in {2, 3} and star_sign in star_sign_map:
             star_sign = star_sign_map[star_sign]
-            star_sign_daily = star_sign_notify.StarSignDaily(star_sign, star_sign_dict[star_sign])
+            star_sign_daily = star_sign_notify.lineNotifyStarSign(star_sign, star_sign_dict[star_sign])
             message = TextSendMessage(text = star_sign_daily)
             line_bot_api.reply_message(event.reply_token, message)
         
