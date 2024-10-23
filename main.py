@@ -146,6 +146,7 @@ def handling_message(event):
         elif user_message.startswith('！公告 ') or user_message.startswith('!公告 '):
             # temp remove for more consider
             # announce_notify.lineNotifyAnnounce(user_message[4:], announce_token)
+            print("temp remove for more consider")
         
         # 幹話
         elif user_message == "好美":
