@@ -21,18 +21,20 @@ def StarSignDaily(star_sign, serial_no):
             daily_analysis += paragraph.get_text(strip=True) + '\n'
 
     if daily_analysis.find("整體運勢") == -1:
-        return "媽的找不到星座運勢 八成是星座網頁出問題了 可憐哪!快報修吧"
+        return "媽的找不到星座運勢 八成是星座網頁出問題了 可憐哪! 不然你晚點再問一次吧 我再幫你查查看= ="
         
     return daily_analysis
 
 def lineNotifyStarSign(token, star_sign, serial_no):
 
+    # remove line notify for following line policy
     # add headers
-    headers = {
-        "Authorization": "Bearer " + token,
-        "Content-Type": "application/x-www-form-urlencoded"}
+    # headers = {
+    #     "Authorization": "Bearer " + token,
+    #     "Content-Type": "application/x-www-form-urlencoded"}
     
-    msg = '\n' + StarSignDaily(star_sign, serial_no)
+    msg = '【今日運勢】\n'
+    msg += StarSignDaily(star_sign, serial_no)
     msg += '\n'
     msg += '若要查詢更多星座運勢 \n'
     msg += '請輸入: ! + 星座名 \n'
