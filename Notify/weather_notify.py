@@ -15,6 +15,7 @@ def lineNotifyWeather(cwa_token):
 
     # set the weather of location
     Location_List = ['臺北市', '新北市', '桃園市', '基隆市', '高雄市']
+    msg = '【今日天氣】\n'
     msg = "\r時間: 6:00~18:00\r"
     msg_weather = ''
 
@@ -32,7 +33,7 @@ def lineNotifyWeather(cwa_token):
         MinT = json_format['records']['location'][0]['weatherElement'][2]['time'][0]['parameter']['parameterName']
         MaxT = json_format['records']['location'][0]['weatherElement'][4]['time'][0]['parameter']['parameterName']
         pop = json_format['records']['location'][0]['weatherElement'][1]['time'][0]['parameter']['parameterName']
-        msg_weather = msg_weather + f"\n{location}: {weather}\n氣溫: {MinT}度~{MaxT}度\n降雨機率: {pop}%"
+        msg_weather = msg_weather + '\n' + f"{location}: {weather}\n氣溫: {MinT}度~{MaxT}度\n降雨機率: {pop}%"
 
     return msg + msg_weather
     # send request
