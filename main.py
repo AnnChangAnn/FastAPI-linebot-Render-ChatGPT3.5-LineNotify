@@ -64,10 +64,16 @@ async def lineNotifyWeather():
     return 'OK'
 
 # Line Weather Notify
+# Line StarSign Notify
 @app.post("/lineNotifyStarSign")
 async def lineNotifyStarSign():
     random_star_sign = random.choice(list(star_sign_dict.keys()))
-    star_sign_notify.lineNotifyStarSign(star_sign_token, random_star_sign, star_sign_dict[random_star_sign])
+    reply_msg = star_sign_notify.lineNotifyStarSign(star_sign_token, random_star_sign, star_sign_dict[random_star_sign])
+
+    specific_notify_id = os.getenv('SPECIFIC_NOTIFY_ID', None)
+    notify_ids = specific_notify_id.split(',')
+    for id in notify_ids:
+        line_bot_api.push_message(id, TextSendMessage(text=reply_msg))
     return 'OK'
 
 # Keep Alive
