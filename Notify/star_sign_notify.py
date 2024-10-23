@@ -25,7 +25,7 @@ def StarSignDaily(star_sign, serial_no):
         
     return daily_analysis
 
-def lineNotifyStarSign(token, star_sign, serial_no):
+def lineNotifyStarSign(star_sign, serial_no):
 
     # remove line notify for following line policy
     # add headers
