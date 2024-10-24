@@ -11,19 +11,17 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
 from Class import chatgpt
-from Notify import weather_notify, announce_notify, star_sign_notify
+from Notify import weather_notify, star_sign_notify
+# from Notify import announce_notify
 
 # get env variables
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN',  None))
 handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET',  None))
-
-weather_token = os.getenv('WEATHER_TOKEN', None)
-star_sign_token = os.getenv('STAR_SIGN_TOKEN', None)
 introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
-announce_token = os.getenv('ANNOUNCE_TOKEN', None)
 cwa_token = os.getenv('CWA_TOKEN', None)
 
-# push message notify ids
+# push message ids
+announce_group_id = os.getenv('ANNOUNCE_GROUP_ID', None)
 specific_notify_id = os.getenv('SPECIFIC_NOTIFY_ID', None)
 notify_ids = specific_notify_id.split(',')
 
@@ -112,9 +110,9 @@ def handling_message(event):
     user_message = str(event.message.text)
     print(user_message)
 
-    if event.source.type == 'group':
-        group_id = event.source.group_id
-        print("Message is from group. Group ID:", group_id)
+    # if event.source.type == 'group':
+    #     group_id = event.source.group_id
+    #     print("Message is from group. Group ID:", group_id)
 
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 
@@ -146,7 +144,10 @@ def handling_message(event):
         elif user_message.startswith('！公告 ') or user_message.startswith('!公告 '):
             # temp remove for more consider
             # announce_notify.lineNotifyAnnounce(user_message[4:], announce_token)
-            print("temp remove for more consider")
+            if event.source.type == 'group' and event.source.group_id == announce_group_id:
+                for id in notify_ids:
+                    line_bot_api.push_message(id, TextSendMessage(text=user_message[4:]))
+            # print("temp remove for more consider")
         
         # 幹話
         elif user_message == "好美":
