@@ -21,6 +21,7 @@ introduce_msg = os.getenv('INTRODUCE_MESSAGE', None)
 cwa_token = os.getenv('CWA_TOKEN', None)
 
 # push message ids
+authorized_user = os.getenv('AUTHORIZED_USER', None)
 announce_group_id = os.getenv('ANNOUNCE_GROUP_ID', None)
 specific_notify_id = os.getenv('SPECIFIC_NOTIFY_ID', None)
 notify_ids = specific_notify_id.split(',')
@@ -109,7 +110,6 @@ def handling_message(event):
     #replyToken = event.reply_token
     user_message = str(event.message.text)
     print(user_message)
-    print(event.source.user_id)
 
     # if event.source.type == 'group':
     #     group_id = event.source.group_id
@@ -165,6 +165,10 @@ def handling_message(event):
             #line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
 
         elif user_message == "!!testtest123":
+            event_id = check_group_or_user(event.source)
+            if event_id not in notify_ids or event.source.user_id != authorized_user:
+                return
+            
             weather_reply = weather_notify.lineNotifyWeather(cwa_token)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
             star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
