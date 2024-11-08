@@ -22,28 +22,14 @@ cwa_token = os.getenv('CWA_TOKEN', None)
 
 # push message ids
 authorized_user = os.getenv('AUTHORIZED_USER', None)
+authorized_msg = os.getenv('AUTHORIZED_MSG', None)
 announce_group_id = os.getenv('ANNOUNCE_GROUP_ID', None)
 specific_notify_id = os.getenv('SPECIFIC_NOTIFY_ID', None)
 notify_ids = specific_notify_id.split(',')
 
 # init dictionary
-star_sign_map = {
-    '牡羊座': '牡羊座', '金牛座': '金牛座', '雙子座': '雙子座', '巨蟹座': '巨蟹座',
-    '獅子座': '獅子座', '處女座': '處女座', '天秤座': '天秤座', '天蠍座': '天蠍座',
-    '射手座': '射手座', '摩羯座': '摩羯座', '水瓶座': '水瓶座', '雙魚座': '雙魚座',
-    '双子座': '雙子座', '天平座': '天秤座', '天枰座': '天秤座', '魔羯座': '摩羯座',
-    '水平座': '水瓶座', '双魚座': '雙魚座', '水平': '水瓶座', '双魚': '雙魚座',
-    '牡羊': '牡羊座', '金牛': '金牛座', '雙子': '雙子座', '巨蟹': '巨蟹座',
-    '獅子': '獅子座', '處女': '處女座', '天秤': '天秤座', '天蠍': '天蠍座',
-    '射手': '射手座', '摩羯': '摩羯座', '水瓶': '水瓶座', '雙魚': '雙魚座',
-    '双子': '雙子座', '天平': '天秤座', '天枰': '天秤座', '魔羯': '摩羯座'
-}
-star_sign_dict = json.loads(os.getenv('STAR_SIGN_MAPPING', None))
-# star_sign_dict = {
-#     '牡羊座': '0', '金牛座': '1', '雙子座': '2', '巨蟹座': '3',
-#     '獅子座': '4', '處女座': '5', '天秤座': '6', '天蠍座': '7',
-#     '射手座': '8', '摩羯座': '9', '水瓶座': '10', '雙魚座': '11'
-# }
+star_sign_map = json.loads(os.getenv('STAR_SIGN_WORDS', None))
+star_sign_dict = json.loads(os.getenv('STAR_SIGN_DICT', None))
 special_chars = {"!", "！"}
 
 # init ChatGPT
@@ -165,15 +151,13 @@ def handling_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="測試成功!"))
             #line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
 
-        elif user_message == "!!testtest123":
+        elif user_message == authorized_msg:
             event_id = check_group_or_user(event.source)
             if event_id not in notify_ids or event.source.user_id != authorized_user:
                 return
-            
             weather_reply = weather_notify.lineNotifyWeather(cwa_token)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
             star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
-            #time.sleep(31)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
