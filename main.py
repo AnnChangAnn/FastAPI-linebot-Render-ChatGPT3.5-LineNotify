@@ -109,6 +109,7 @@ def handling_message(event):
     #replyToken = event.reply_token
     user_message = str(event.message.text)
     print(user_message)
+    print(event.source.user_id)
 
     # if event.source.type == 'group':
     #     group_id = event.source.group_id
@@ -163,4 +164,11 @@ def handling_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="測試成功!"))
             #line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
 
+        elif user_message == "!!testtest123":
+            weather_reply = weather_notify.lineNotifyWeather(cwa_token)
+            random_star_sign = random.choice(list(star_sign_dict.keys()))
+            star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
+            reply_msg = f"{weather_reply}\n{star_sign_reply}"
+            #time.sleep(31)
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
