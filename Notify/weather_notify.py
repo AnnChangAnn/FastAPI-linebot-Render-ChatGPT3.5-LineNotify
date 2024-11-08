@@ -2,17 +2,6 @@ import requests, json
 from datetime import datetime
 
 def lineNotifyWeather(cwa_token):
-
-    # test token : VAH3QdBdbkQ7B9blSEpEpjlwA4GR0MKxzbEHhShkse8
-    # add headers
-    # headers = {
-    #     "Authorization": "Bearer " + token,
-    #     "Content-Type": "application/x-www-form-urlencoded"}
-    
-    # get now time
-    # NowDate = datetime.now().strftime('%Y-%m-%d')
-    # print(NowDate)
-
     # set the weather of location
     Location_List = ['臺北市', '新北市', '桃園市', '基隆市', '高雄市']
     msg = '【今日天氣】'
@@ -23,7 +12,6 @@ def lineNotifyWeather(cwa_token):
         # 氣象局改名為氣象署 cwb => cwa
         cwbapi = f"https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization={cwa_token}&locationName={i}&startTime="
         cwbr = requests.get(cwbapi)
-        print('request success!!')
 
         cwbr_dict = cwbr.json()
         json_string = json.dumps(cwbr_dict)
@@ -36,7 +24,3 @@ def lineNotifyWeather(cwa_token):
         msg_weather += f"\n\n{location}: {weather}\n氣溫: {MinT}度~{MaxT}度\n降雨機率: {pop}%"
 
     return msg + msg_weather + ' \n '
-    # send request
-    # res = {'message': msg + msg_weather}
-    # response = requests.post("https://notify-api.line.me/api/notify",
-    #                   headers=headers, params=res)
