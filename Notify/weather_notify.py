@@ -16,7 +16,7 @@ def lineNotifyWeather(cwa_token):
     # set the weather of location
     Location_List = ['臺北市', '新北市', '桃園市', '基隆市', '高雄市']
     msg = '【今日天氣】'
-    msg += "\r    時間: 6:00~18:00\r"
+    msg += "\r時間: 6:00~18:00\r"
     msg_weather = ''
 
     for i in Location_List[0:]:
