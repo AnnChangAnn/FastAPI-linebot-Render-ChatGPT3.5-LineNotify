@@ -39,7 +39,7 @@ def lineNotifyWeather(cwa_token):
     氣溫: {MinT}度~{MaxT}度
     降雨機率: {pop}%'''
 
-    return msg + msg_weather
+    return msg + msg_weather + '\r'
     # send request
     # res = {'message': msg + msg_weather}
     # response = requests.post("https://notify-api.line.me/api/notify",
