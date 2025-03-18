@@ -26,13 +26,6 @@ def StarSignDaily(star_sign, serial_no):
     return daily_analysis
 
 def lineNotifyStarSign(star_sign, serial_no):
-
-    # remove line notify for following line policy
-    # add headers
-    # headers = {
-    #     "Authorization": "Bearer " + token,
-    #     "Content-Type": "application/x-www-form-urlencoded"}
-    
     msg = '【今日運勢】\n'
     msg += StarSignDaily(star_sign, serial_no)
     msg += '\n'
@@ -41,9 +34,8 @@ def lineNotifyStarSign(star_sign, serial_no):
     msg += '例如: !牡羊座'
 
     return msg
-    # send request
-    # res = {'message': msg }
 
+    # remove line notify for following line policy
     # if msg.find("媽的找不到星座運勢") >= 0:
     #     myself_token = os.getenv('MYSELF_TOKEN', None)
     #     headers = {
