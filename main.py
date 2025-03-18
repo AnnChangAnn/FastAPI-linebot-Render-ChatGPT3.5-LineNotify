@@ -94,13 +94,8 @@ def handle_join(event):
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handling_message(event):
-    #replyToken = event.reply_token
     user_message = str(event.message.text)
     print(user_message)
-
-    # if event.source.type == 'group':
-    #     group_id = event.source.group_id
-    #     print("Message is from group. Group ID:", group_id)
 
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 
@@ -131,11 +126,9 @@ def handling_message(event):
         # announce to line group
         elif user_message.startswith('！公告 ') or user_message.startswith('!公告 '):
             # temp remove for more consider
-            # announce_notify.lineNotifyAnnounce(user_message[4:], announce_token)
             if event.source.type == 'group' and event.source.group_id == announce_group_id:
                 for id in notify_ids:
                     line_bot_api.push_message(id, TextSendMessage(text=user_message[4:]))
-            # print("temp remove for more consider")
         
         # 幹話
         elif user_message == "好美":
@@ -147,7 +140,6 @@ def handling_message(event):
         elif user_message == "!!測試":
             event_id = check_group_or_user(event.source)
             print(event_id)
-            #time.sleep(31)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="測試成功!"))
             #line_bot_api.push_message(event_id, TextSendMessage(text="測試成功!"))
 
