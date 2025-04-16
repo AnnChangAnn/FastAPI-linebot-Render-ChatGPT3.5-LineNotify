@@ -5,6 +5,8 @@ import os
 import json
 import random
 import asyncio
+import threading
+import time
 from fastapi import FastAPI, Request, HTTPException
 
 from linebot import LineBotApi, WebhookHandler
@@ -33,6 +35,14 @@ star_sign_map = json.loads(os.getenv('STAR_SIGN_WORDS', None))
 star_sign_dict = json.loads(os.getenv('STAR_SIGN_DICT', None))
 special_chars = {"!", "！"}
 
+def start_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+global_loop = asyncio.new_event_loop()
+thread = threading.Thread(target=start_loop, args=(global_loop,), daemon=True)
+thread.start()
+
 # init ChatGPT
 chatGPT = chatgpt.ChatGPT()
 app = FastAPI()
@@ -52,12 +62,11 @@ async def hello():
 # Line Weather Notify
 @app.post("/lineNotifyWeather")
 async def lineNotifyWeather():
-    loop = asyncio.get_event_loop()
-    future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), loop)
-    reply_msg = future.result()
+    future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
+    weather_reply = future.result(timeout=10)
 
     for id in notify_ids:
-        line_bot_api.push_message(id, TextSendMessage(text=reply_msg))
+        line_bot_api.push_message(id, TextSendMessage(text=weather_reply))
     return 'OK'
 
 # Line StarSign Notify
@@ -152,16 +161,14 @@ def handling_message(event):
             if event_id not in notify_ids or event.source.user_id != authorized_user:
                 print("return by not authorized user")
                 return
-            loop = asyncio.get_event_loop()
-            future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), loop)
-            weather_reply = future.result()
+            future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
+            weather_reply = future.result(timeout=10)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
             star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
         elif user_message == "今日天氣":
-            loop = asyncio.get_event_loop()
-            future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), loop)
-            weather_reply = future.result()
+            future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
+            weather_reply = future.result(timeout=10)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
