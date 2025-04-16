@@ -145,7 +145,9 @@ def handling_message(event):
 
         elif user_message == authorized_msg:
             event_id = check_group_or_user(event.source)
+	    print(event_id)
             if event_id not in notify_ids or event.source.user_id != authorized_user:
+		print("return by not authorized user")
                 return
             weather_reply = weather_notify.lineNotifyWeather(cwa_token)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
@@ -153,3 +155,6 @@ def handling_message(event):
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
+        elif user_message == "今日天氣":
+            weather_reply = weather_notify.lineNotifyWeather(cwa_token)
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
