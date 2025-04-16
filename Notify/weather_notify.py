@@ -17,7 +17,7 @@ def lineNotifyWeather(cwa_token):
 
         for attempt in range(3):  # 最多 retry 三次
             try:
-                response = requests.get(url, timeout=5)
+                response = requests.get(cwbapi, timeout=5)
                 if response.status_code == 200:
                     break
                 else:
