@@ -157,7 +157,7 @@ def handling_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
         elif user_message == "今日天氣":
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            weather_reply = loop.run_until_complete(weather_notify.lineNotifyWeather(cwa_token))
+            loop = asyncio.get_event_loop()
+            future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), loop)
+            weather_reply = future.result()
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
