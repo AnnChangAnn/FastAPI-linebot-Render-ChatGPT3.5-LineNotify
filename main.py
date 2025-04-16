@@ -180,6 +180,6 @@ def handling_message(event):
                 print(weather_reply)
             except Exception as e:
                 print(f"❌ weather_notify 發生錯誤: {e}")
-                weather_reply = "目前天氣查詢異常，請稍後再試。
+                weather_reply = "目前天氣查詢異常，請稍後再試。"
 
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
