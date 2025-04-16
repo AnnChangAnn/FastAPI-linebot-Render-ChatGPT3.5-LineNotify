@@ -65,7 +65,7 @@ async def hello():
 @app.post("/lineNotifyWeather")
 async def lineNotifyWeather():
     future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-    weather_reply = future.result(timeout=10)
+    weather_reply = future.result(timeout=15)
 
     for id in notify_ids:
         line_bot_api.push_message(id, TextSendMessage(text=weather_reply))
@@ -164,13 +164,16 @@ def handling_message(event):
                 print("return by not authorized user")
                 return
             future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-            weather_reply = future.result(timeout=10)
+            weather_reply = future.result(timeout=15)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
             star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
         elif user_message in {"!今日天氣", "！今日天氣"}:
+            print("call lineNotifyWeather")
             future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-            weather_reply = future.result(timeout=10)
+            print(future)
+            weather_reply = future.result(timeout=15)
+            print(weather_reply)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
