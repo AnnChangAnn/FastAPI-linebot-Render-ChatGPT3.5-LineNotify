@@ -79,7 +79,7 @@ async def callback(request: Request):
     signature = request.headers["X-Line-Signature"]
     body = await request.body()
     try:
-        handler.handle(body.decode(), signature)
+        await handler.handle(body.decode(), signature)
     except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Missing Parameters")
     return "OK"
