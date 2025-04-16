@@ -170,7 +170,7 @@ def handling_message(event):
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
-        elif user_message == "今日天氣":
+        elif user_message in {"!今日天氣", "！今日天氣"}:
             future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
             weather_reply = future.result(timeout=10)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
