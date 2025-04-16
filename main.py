@@ -47,7 +47,7 @@ def check_group_or_user(eventsource):
 # test method
 @app.get("/test") # 指定 api 路徑 (get方法)
 async def hello():
-	return "Hello World for AnnChangAnn!!"
+    return "Hello World for AnnChangAnn!!"
 
 # Line Weather Notify
 @app.post("/lineNotifyWeather")
