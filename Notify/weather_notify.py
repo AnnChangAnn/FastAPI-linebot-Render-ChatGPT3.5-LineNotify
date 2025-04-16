@@ -12,6 +12,7 @@ def lineNotifyWeather(cwa_token):
         # 氣象局改名為氣象署 cwb => cwa
         print("call cwa api...")
         cwbapi = f"https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization={cwa_token}&locationName={i}"
+        print(f"cwbapi : {cwbapi}")
         cwbr = requests.get(cwbapi)
 
         print(f"get response : {cwbr}")
