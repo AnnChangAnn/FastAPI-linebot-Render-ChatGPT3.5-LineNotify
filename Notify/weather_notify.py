@@ -12,7 +12,7 @@ async def lineNotifyWeather(cwa_token: str):
         "accept": "application/json"
     }
 
-    with httpx.Client(timeout=30) as client:
+    with httpx.Client(timeout=5.0) as client:
         for location in location_list:
             print(f"查詢 {location} 天氣中...")
             cwbapi = (
