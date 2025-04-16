@@ -35,6 +35,7 @@ star_sign_map = json.loads(os.getenv('STAR_SIGN_WORDS', None))
 star_sign_dict = json.loads(os.getenv('STAR_SIGN_DICT', None))
 special_chars = {"!", "！"}
 
+# ====== create golbal loop ===========
 def start_loop(loop):
     asyncio.set_event_loop(loop)
     loop.run_forever()
@@ -42,6 +43,7 @@ def start_loop(loop):
 global_loop = asyncio.new_event_loop()
 thread = threading.Thread(target=start_loop, args=(global_loop,), daemon=True)
 thread.start()
+# ====== create golbal loop end =======
 
 # init ChatGPT
 chatGPT = chatgpt.ChatGPT()
