@@ -36,13 +36,13 @@ star_sign_dict = json.loads(os.getenv('STAR_SIGN_DICT', None))
 special_chars = {"!", "！"}
 
 # ====== create golbal loop ===========
+def start_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
 global_loop = asyncio.new_event_loop()
-
-def start_loop():
-    asyncio.set_event_loop(global_loop)
-    global_loop.run_forever()
-
-threading.Thread(target=start_loop, daemon=True).start()
+thread = threading.Thread(target=start_loop, args=(global_loop,), daemon=True)
+thread.start()
 # ====== create golbal loop end =======
 
 # init ChatGPT
@@ -171,15 +171,11 @@ def handling_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
         elif user_message in {"!今日天氣", "！今日天氣"}:
-            print("📦 收到 '今日天氣' 指令")
             try:
-                print("call lineNotifyWeather")
                 future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-                print(future)
                 weather_reply = future.result(timeout=15)
-                print(weather_reply)
             except Exception as e:
-                print(f"❌ weather_notify 發生錯誤: {e}")
+                print(f"❌ Weather notify error: {e}")
                 weather_reply = "目前天氣查詢異常，請稍後再試。"
 
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
