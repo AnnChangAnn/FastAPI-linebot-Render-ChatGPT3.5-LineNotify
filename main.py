@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import json
 import random
-import asyncio
+#import asyncio
 from fastapi import FastAPI, Request, HTTPException
 
 from linebot import LineBotApi, WebhookHandler
@@ -94,7 +94,7 @@ def handle_join(event):
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
-def handling_message(event):
+async def handling_message(event):
     user_message = str(event.message.text)
     print(user_message)
 
@@ -157,7 +157,5 @@ def handling_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
         elif user_message == "今日天氣":
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            weather_reply = loop.run_until_complete(weather_notify.lineNotifyWeather(cwa_token))
+            weather_reply = await weather_notify.lineNotifyWeather(cwa_token)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
