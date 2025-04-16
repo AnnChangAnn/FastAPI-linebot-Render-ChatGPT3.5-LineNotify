@@ -171,9 +171,15 @@ def handling_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
         elif user_message in {"!今日天氣", "！今日天氣"}:
-            print("call lineNotifyWeather")
-            future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-            print(future)
-            weather_reply = future.result(timeout=15)
-            print(weather_reply)
+            print("📦 收到 '今日天氣' 指令")
+            try:
+                print("call lineNotifyWeather")
+                future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
+                print(future)
+                weather_reply = future.result(timeout=15)
+                print(weather_reply)
+            except Exception as e:
+                print(f"❌ weather_notify 發生錯誤: {e}")
+                weather_reply = "目前天氣查詢異常，請稍後再試。
+
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
