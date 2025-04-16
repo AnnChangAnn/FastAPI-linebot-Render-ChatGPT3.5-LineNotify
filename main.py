@@ -52,7 +52,9 @@ async def hello():
 # Line Weather Notify
 @app.post("/lineNotifyWeather")
 async def lineNotifyWeather():
-    reply_msg = weather_notify.lineNotifyWeather(cwa_token)
+    loop = asyncio.get_event_loop()
+    future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), loop)
+    reply_msg = future.result()
 
     for id in notify_ids:
         line_bot_api.push_message(id, TextSendMessage(text=reply_msg))
@@ -150,7 +152,9 @@ def handling_message(event):
             if event_id not in notify_ids or event.source.user_id != authorized_user:
                 print("return by not authorized user")
                 return
-            weather_reply = weather_notify.lineNotifyWeather(cwa_token)
+            loop = asyncio.get_event_loop()
+            future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), loop)
+            weather_reply = future.result()
             random_star_sign = random.choice(list(star_sign_dict.keys()))
             star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
