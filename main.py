@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import json
 import random
-#import asyncio
+import asyncio
 from fastapi import FastAPI, Request, HTTPException
 
 from linebot import LineBotApi, WebhookHandler
