@@ -65,7 +65,7 @@ async def hello():
 @app.post("/lineNotifyWeather")
 async def lineNotifyWeather():
     future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-    weather_reply = future.result(timeout=15)
+    weather_reply = future.result(timeout=30)
 
     for id in notify_ids:
         line_bot_api.push_message(id, TextSendMessage(text=weather_reply))
@@ -164,7 +164,7 @@ def handling_message(event):
                 print("return by not authorized user")
                 return
             future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-            weather_reply = future.result(timeout=15)
+            weather_reply = future.result(timeout=30)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
             star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
@@ -173,7 +173,7 @@ def handling_message(event):
         elif user_message in {"!今日天氣", "！今日天氣"}:
             try:
                 future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-                weather_reply = future.result(timeout=15)
+                weather_reply = future.result(timeout=30)
             except Exception as e:
                 print(f"❌ Weather notify error: {e}")
                 weather_reply = "目前天氣查詢異常，請稍後再試。"
