@@ -145,9 +145,9 @@ def handling_message(event):
 
         elif user_message == authorized_msg:
             event_id = check_group_or_user(event.source)
-	    print(event_id)
+            print(event_id)
             if event_id not in notify_ids or event.source.user_id != authorized_user:
-		print("return by not authorized user")
+                print("return by not authorized user")
                 return
             weather_reply = weather_notify.lineNotifyWeather(cwa_token)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
