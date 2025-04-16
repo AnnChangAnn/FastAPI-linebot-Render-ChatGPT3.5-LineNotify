@@ -79,7 +79,7 @@ async def callback(request: Request):
     signature = request.headers["X-Line-Signature"]
     body = await request.body()
     try:
-        await handler.handle(body.decode(), signature)
+        handler.handle(body.decode(), signature)
     except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Missing Parameters")
     return "OK"
@@ -94,7 +94,7 @@ def handle_join(event):
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
-async def handling_message(event):
+def handling_message(event):
     user_message = str(event.message.text)
     print(user_message)
 
@@ -157,5 +157,7 @@ async def handling_message(event):
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = reply_msg))
 
         elif user_message == "今日天氣":
-            weather_reply = await weather_notify.lineNotifyWeather(cwa_token)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            weather_reply = loop.run_until_complete(weather_notify.lineNotifyWeather(cwa_token))
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = weather_reply))
