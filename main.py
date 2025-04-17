@@ -162,6 +162,7 @@ def handling_message(event):
             print(event_id)
             if event_id not in notify_ids or event.source.user_id != authorized_user:
                 print("return by not authorized user")
+                print(f"eventId: {event_id}, userId: {event.source.user_id}")
                 return
             future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
             weather_reply = future.result(timeout=30)
