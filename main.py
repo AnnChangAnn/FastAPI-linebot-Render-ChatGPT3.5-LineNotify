@@ -165,7 +165,7 @@ def handling_message(event):
                 print(f"eventId: {event_id}, userId: {event.source.user_id}")
                 return
             future = asyncio.run_coroutine_threadsafe(weather_notify.lineNotifyWeather(cwa_token), global_loop)
-            weather_reply = future.result(timeout=30)
+            weather_reply = future.result(timeout=180)
             random_star_sign = random.choice(list(star_sign_dict.keys()))
             star_sign_reply = star_sign_notify.lineNotifyStarSign(random_star_sign, star_sign_dict[random_star_sign])
             reply_msg = f"{weather_reply}\n{star_sign_reply}"
