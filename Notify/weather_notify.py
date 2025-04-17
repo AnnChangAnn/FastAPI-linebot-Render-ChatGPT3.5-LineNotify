@@ -23,14 +23,14 @@ async def lineNotifyWeather(cwa_token: str):
             # retry up to 3 times
             for attempt in range(3):
                 try:
-                    response = await client.get(url, headers=headers)
+                    response = await client.get(url)
                     if response.status_code == 200:
                         break
                     else:
                         print(f"錯誤狀態碼: {response.status_code}，重試中...")
                 except Exception as e:
                     print(f"連線錯誤({location}): {e}，重試中...")
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(2)
             else:
                 print(f"無法取得 {location} 天氣資料。")
                 continue
