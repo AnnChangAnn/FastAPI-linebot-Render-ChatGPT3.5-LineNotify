@@ -12,7 +12,7 @@ async def lineNotifyWeather(cwa_token: str):
         "accept": "application/json"
     }
 
-    with httpx.Client(timeout=10) as client:
+    async with httpx.AsyncClient(timeout=10) as client:
         for location in location_list:
             print(f"查詢 {location} 天氣中...")
             cwbapi = (
@@ -30,7 +30,7 @@ async def lineNotifyWeather(cwa_token: str):
                         print(f"錯誤狀態碼: {response.status_code}，重試中...")
                 except httpx.RequestError as e:
                     print(f"連線錯誤({location}): {e}，重試中...")
-                time.sleep(1)
+                    await asyncio.sleep(1)
             else:
                 print(f"無法取得 {location} 天氣資料。")
                 continue
