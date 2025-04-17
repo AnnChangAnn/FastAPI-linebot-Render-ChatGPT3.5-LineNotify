@@ -1,5 +1,5 @@
 import httpx
-import time
+import asyncio
 
 async def lineNotifyWeather(cwa_token: str):
     # set the weather of location
@@ -15,7 +15,7 @@ async def lineNotifyWeather(cwa_token: str):
     async with httpx.AsyncClient(timeout=10) as client:
         for location in location_list:
             print(f"查詢 {location} 天氣中...")
-            cwbapi = (
+            url = (
                 "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001"
                 f"?Authorization={cwa_token}&locationName={location}"
             )
@@ -23,12 +23,12 @@ async def lineNotifyWeather(cwa_token: str):
             # retry up to 3 times
             for attempt in range(3):
                 try:
-                    response = client.get(cwbapi, headers=headers)
+                    response = await client.get(url, headers=headers)
                     if response.status_code == 200:
                         break
                     else:
                         print(f"錯誤狀態碼: {response.status_code}，重試中...")
-                except httpx.RequestError as e:
+                except Exception as e:
                     print(f"連線錯誤({location}): {e}，重試中...")
                     await asyncio.sleep(1)
             else:
