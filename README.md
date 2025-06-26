@@ -1,9 +1,12 @@
 ## FastAPI-linebot-Render-ChatGPT3.5-LineNotify
 這是一個使用 Python FastAPI 框架創建的 linebot，並建置於 Render 平台上運行，並使用 ChatGPT API 來回覆對話，與結合 LineNotify 來發佈天氣預報。
 
+<br/>
+
 #### 以 Python FastAPI 框架建立 linebot，可參考以下文章之 Sample Code 並進行調整
 https://hackmd.io/@CXPhoenix/ryn6ofsGj
 
+<br/>
 
 #### 部屬在 Render 上
 1. 到 render 平台上申請帳號並登入：https://render.com/
@@ -18,8 +21,14 @@ https://hackmd.io/@CXPhoenix/ryn6ofsGj
 10. 按最下方的 Create Web Service 即可開始部屬
 11. 部屬完成後，記得將 Service Url 貼到 line developer 的 Webhook URL 上，這個 Linebot 才能順利運作。
 
+<br/>
 
 #### 使用 LineNotify 來發佈天氣預報
 1. 申請 LineNotify 發行權杖，可參考 LineNotify 官網：https://notify-bot.line.me/zh_TW/
 2. 申請中央氣象局 API，可參考中央氣象局 Opendata API：https://opendata.cwb.gov.tw/dist/opendata-swagger.html
 3. 使用 Google Cloud Scheduler 建立工作排程，定期 Call Linebot Weather API 來發送天氣預報
+
+
+#### 2025.6.26 Update: 
+目前 LineNotify 已退場，若依舊想設定排程定期發送通知，可付費使用官方提供的 push message API，或結合其他第三方 APP (Ex: iPhone 建立捷徑 )，設定定期發送訊息給 Linebot，讓 Linebot 來回覆對話以達成定期發送天氣預報的目的
+
