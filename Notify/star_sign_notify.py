@@ -5,7 +5,11 @@ from bs4 import BeautifulSoup
 def StarSignDaily(star_sign, serial_no):
     #set url
     star_sign_url = f"https://astro.click108.com.tw/daily_{serial_no}.php?iAstro={serial_no}"
-    response = requests.get(star_sign_url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+    }
+    response = requests.get(star_sign_url, verify=False, headers=headers)
+    #response = requests.get(star_sign_url)
     response.encoding = 'utf-8'
 
     # use BeautifulSoup to analyze HTML
