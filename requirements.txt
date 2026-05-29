@@ -1,5 +1,5 @@
 line-bot-sdk
-openai>=1.90.0
+openai>=1.75.0,<2.0.0
 anyio
 fastapi
 pydantic==1.10.5
