@@ -10,14 +10,12 @@ class ChatGPT:
 
     def get_response(self, message):
         prompt = message[4:]
-        response = self.client.chat.completions.create(
+        response = self.client.responses.create(
             model=self.model,
-            messages=[
-                {'role': 'user', 'content': prompt}
-            ],
+            input=prompt,
             temperature=self.temperature,
-            max_tokens=self.max_tokens
+            max_output_tokens=self.max_tokens
         )
-        reply_msg = response.choices[0].message.content.strip()
+        reply_msg = response.output_text.strip()
         print('AI回答內容' + reply_msg)
         return reply_msg
